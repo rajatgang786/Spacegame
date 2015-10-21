@@ -11,6 +11,7 @@ import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+//edited by kush
 public class MyGame extends ApplicationAdapter implements ApplicationListener {
 
 	static MyGame _game = null;
