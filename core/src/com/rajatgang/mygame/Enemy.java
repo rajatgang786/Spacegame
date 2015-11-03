@@ -58,7 +58,7 @@ public class Enemy {
 	}
 
 	int enemy_moving() {
-		x = x - 0.5f;
+		x = x - 1.0f;
 		return 0;
 	}
 

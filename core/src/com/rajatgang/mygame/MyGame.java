@@ -13,14 +13,17 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 
-
 public class MyGame extends ApplicationAdapter implements ApplicationListener {
 
 	static MyGame _game = null;
 	SpriteBatch batch;
 	Texture texture;
+	Texture texture_health_border;
+	Texture health_inner;
 	Texture texture_hero;
 	Sprite sprite;
+	Sprite sprite_health_border;
+	Sprite sprite_health;
 	Sprite sprite_hero;
 	float x = 150;
 	float b = 100;
@@ -29,10 +32,14 @@ public class MyGame extends ApplicationAdapter implements ApplicationListener {
 	Bullet bullet;
 	monster monst = null; // Monster class object
 	Bulletpool bullets = null;
-	
+	boolean alive = true;
 	Rectangle playerBounds = new Rectangle();
-	float width = 200, height = 150;
-	
+	float width = 200, height = 200;
+	float health_border_width = 200, health_border_height = 30;
+	float health_border_x = 8, health_border_y = 440;
+	float health_inner_width = 175, health_inner_height = 5;
+	float health_inner_x = 30, health_inner_y = 453;
+
 	public MyGame() {
 		_game = this;
 	}
@@ -42,23 +49,31 @@ public class MyGame extends ApplicationAdapter implements ApplicationListener {
 		batch = new SpriteBatch();
 		texture = new Texture("space_background1.jpg");
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+		texture_health_border = new Texture("healthborder.png");
+		texture_health_border.setFilter(TextureFilter.Linear,
+				TextureFilter.Linear);
+		health_inner = new Texture("healthtexture.png");
+		health_inner.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		sprite = new Sprite(texture);
+		sprite_health_border = new Sprite(texture_health_border);
+		sprite_health = new Sprite(health_inner);
 		texture_hero = new Texture("heroism.png");
 		texture_hero.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		sprite_hero = new Sprite(texture_hero);
 		sprite_hero.setSize(width, height);
-		
+
 		playerBounds.x = 10;
 		playerBounds.y = x;
 		playerBounds.width = width;
 		playerBounds.height = height;
-		
+
 		Gdx.input.setInputProcessor(new MyInputProcessor(this));
 
 		game_width = Gdx.graphics.getWidth();
 		game_height = Gdx.graphics.getHeight();
-		System.out.println("Width = " +game_width+"game height = "+game_height);
-		
+		System.out.println("Width = " + game_width + "game height = "
+				+ game_height);
+
 		monst = new monster();
 		bullets = new Bulletpool();
 
@@ -77,13 +92,26 @@ public class MyGame extends ApplicationAdapter implements ApplicationListener {
 		sprite.setPosition(b, 5);
 		sprite_hero.setPosition(5, x);
 		playerBounds.setPosition(5, x);
-		
+		sprite_health_border.setPosition(health_border_x, health_border_y);
+		sprite_health_border.setSize(health_border_width, health_border_height);
+		sprite_health.setPosition(health_inner_x, health_inner_y);
+		sprite_health.setSize(health_inner_width, health_inner_height);
 		batch.begin();
-		sprite.draw(batch);
-		sprite_hero.draw(batch);
 		
-		monst.update();
-		bullets.bulletfire();
+
+		if (alive == true) {
+			sprite.draw(batch);
+			sprite_hero.draw(batch);
+			sprite_health_border.draw(batch);
+			sprite_health.draw(batch);
+			monst.update();
+			bullets.bulletfire();
+		}
+		else{
+			
+		}
+		
+		
 
 		batch.end();
 
@@ -94,14 +122,17 @@ public class MyGame extends ApplicationAdapter implements ApplicationListener {
 	}
 
 	private void checkCollision() {
-		
+
 		Array<Enemy> pool = monst.enemypool;
-		for(Enemy e : pool){
-			if(e.bound.overlaps(playerBounds)){
-				System.out.println("LOL");
+		for (Enemy e : pool) {
+			if (e.bound.overlaps(playerBounds)) {
+				health_inner_width -= 1;
+				if (health_inner_width == 0) {
+					alive = false;
+				}
 			}
 		}
-		
+
 	}
 
 	/* Infinite Scroll of background image */
@@ -191,7 +222,7 @@ class MyInputProcessor implements InputProcessor {
 
 	/*------------Acting on key Press-----------*/
 	public boolean keyUp(int keycode) {
-		
+
 		switch (keycode) {
 		case Keys.UP:
 			game.setmoveupward(false);
