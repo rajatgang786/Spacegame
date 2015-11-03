@@ -10,6 +10,8 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
 
 
 public class MyGame extends ApplicationAdapter implements ApplicationListener {
@@ -24,9 +26,13 @@ public class MyGame extends ApplicationAdapter implements ApplicationListener {
 	float b = 100;
 	public float game_width, game_height; /* height and width of frame */
 	Enemy enemy;
+	Bullet bullet;
 	monster monst = null; // Monster class object
-	// Monster monster ;
-
+	Bulletpool bullets = null;
+	
+	Rectangle playerBounds = new Rectangle();
+	float width = 200, height = 150;
+	
 	public MyGame() {
 		_game = this;
 	}
@@ -37,16 +43,24 @@ public class MyGame extends ApplicationAdapter implements ApplicationListener {
 		texture = new Texture("space_background1.jpg");
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		sprite = new Sprite(texture);
-		texture_hero = new Texture("hero.png");
+		texture_hero = new Texture("heroism.png");
 		texture_hero.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		sprite_hero = new Sprite(texture_hero);
-
+		sprite_hero.setSize(width, height);
+		
+		playerBounds.x = 10;
+		playerBounds.y = x;
+		playerBounds.width = width;
+		playerBounds.height = height;
+		
 		Gdx.input.setInputProcessor(new MyInputProcessor(this));
 
 		game_width = Gdx.graphics.getWidth();
 		game_height = Gdx.graphics.getHeight();
+		System.out.println("Width = " +game_width+"game height = "+game_height);
 		
 		monst = new monster();
+		bullets = new Bulletpool();
 
 	}
 
@@ -60,20 +74,34 @@ public class MyGame extends ApplicationAdapter implements ApplicationListener {
 		Gdx.gl.glClearColor(0.0f, 0.0f, 0.0f, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-		sprite.setPosition(b, 10);
-		sprite_hero.setPosition(10, x);
-
+		sprite.setPosition(b, 5);
+		sprite_hero.setPosition(5, x);
+		playerBounds.setPosition(5, x);
+		
 		batch.begin();
 		sprite.draw(batch);
 		sprite_hero.draw(batch);
 		
 		monst.update();
+		bullets.bulletfire();
 
 		batch.end();
 
 		updatemotion();
 		scrollbackground();
 
+		checkCollision();
+	}
+
+	private void checkCollision() {
+		
+		Array<Enemy> pool = monst.enemypool;
+		for(Enemy e : pool){
+			if(e.bound.overlaps(playerBounds)){
+				System.out.println("LOL");
+			}
+		}
+		
 	}
 
 	/* Infinite Scroll of background image */
@@ -163,10 +191,9 @@ class MyInputProcessor implements InputProcessor {
 
 	/*------------Acting on key Press-----------*/
 	public boolean keyUp(int keycode) {
-		// System.out.println("hi");
+		
 		switch (keycode) {
 		case Keys.UP:
-			// System.out.println("bye");
 			game.setmoveupward(false);
 			break;
 		case Keys.DOWN:

@@ -4,38 +4,57 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.MathUtils;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
 
 public class Enemy {
 	MyGame game = MyGame.getInstance();
 	Texture texture;
 	Sprite enemy_sprite;
 	float x , y ;
+	float width = 100, height = 100;
+	Rectangle bound = new Rectangle();
 	
-
-	public	Enemy(){
-			create();
+	Array<Enemy> pool;
+	
+	public	Enemy(Array<Enemy> enemypool){
+		pool = enemypool;
+		create();
 		}
 	
 	public void create() {	
-		texture = new Texture("download.jpg");
+		texture = new Texture("enemy.png");
 		texture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
 		enemy_sprite = new Sprite(texture);
-		x = MathUtils.random(game.game_width,game.game_width*2);
-		y = MathUtils.random(0, game.game_height);
+		enemy_sprite.setSize(width, height);
+	
+		bound.x = x = MathUtils.random(game.game_width,game.game_width*1.4f);
+		bound.y = y = MathUtils.random(0, game.game_height);
+		bound.width = width;
+		bound.height = height;
+		
+		for(Enemy e :pool){
+			if(e.bound.overlaps(bound)){
+				bound.x = x += width*4;
+				bound.y = y += height;
+			}
+ 		}
+		
 	}
 
 
-	public int render() {
+	public void render() {
 		enemy_sprite.setPosition(x, y);
 		enemy_sprite.draw(game.batch);
 		
 		if(x + enemy_sprite.getWidth() < 0){
-			x +=600; 
+			x +=700; 
 		}
 		
 		enemy_moving();
 		
-		return 0;
+		bound.x = x;
+		bound.y = y;
 	}
 
 	int enemy_moving() {
