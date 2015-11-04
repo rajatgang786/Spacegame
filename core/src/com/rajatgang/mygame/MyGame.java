@@ -17,27 +17,20 @@ public class MyGame extends ApplicationAdapter implements ApplicationListener {
 
 	static MyGame _game = null;
 	SpriteBatch batch;
-	Texture texture;
-	Texture texture_health_border;
-	Texture health_inner;
-	Texture texture_hero;
-	Sprite sprite;
-	Sprite sprite_health_border;
-	Sprite sprite_health;
-	Sprite sprite_hero;
-	float x = 150;
-	float b = 100;
+	Texture texture, texture_health_border,health_inner, texture_hero;
+	Sprite sprite, sprite_health_border, sprite_health, sprite_hero;
+	float x = 150,b = 100;
 	public float game_width, game_height; /* height and width of frame */
-	Enemy enemy;
-	Bullet bullet;
+	Enemy enemy =null;
+	Bullet bullet = null;
 	monster monst = null; // Monster class object
 	Bulletpool bullets = null;
 	boolean alive = true;
 	public Rectangle playerBounds = new Rectangle();
-	float width = 200, height = 200;
+	float width = 130, height = 100;
 	float health_border_width = 200, health_border_height = 30;
 	float health_border_x = 8, health_border_y = 440;
-	float health_inner_width = 175, health_inner_height = 5;
+	float health_inner_width = 175.0f, health_inner_height = 5.0f;
 	float health_inner_x = 30, health_inner_y = 453;
 
 	public MyGame() {
@@ -97,7 +90,6 @@ public class MyGame extends ApplicationAdapter implements ApplicationListener {
 		sprite_health.setPosition(health_inner_x, health_inner_y);
 		sprite_health.setSize(health_inner_width, health_inner_height);
 		batch.begin();
-		
 
 		if (alive == true) {
 
@@ -107,20 +99,17 @@ public class MyGame extends ApplicationAdapter implements ApplicationListener {
 			sprite_hero.draw(batch);
 			sprite_health_border.draw(batch);
 			sprite_health.draw(batch);
-			monst.update();
-		}
-		else{
 			
 		}
-		
-		
+		monst.update();
 
 		batch.end();
-
+		checkCollision();
 		updatemotion();
 		scrollbackground();
 
-		checkCollision();
+		
+		
 	}
 
 	private void checkCollision() {
@@ -128,7 +117,7 @@ public class MyGame extends ApplicationAdapter implements ApplicationListener {
 		Array<Enemy> pool = monst.enemypool;
 		for (Enemy e : pool) {
 			if (e.bound.overlaps(playerBounds)) {
-				health_inner_width -= 1;
+				health_inner_width -= .5f;
 				if (health_inner_width == 0) {
 					alive = false;
 				}
@@ -136,6 +125,8 @@ public class MyGame extends ApplicationAdapter implements ApplicationListener {
 		}
 
 	}
+
+	
 
 	/* Infinite Scroll of background image */
 	int scrollbackground() {
@@ -169,13 +160,13 @@ public class MyGame extends ApplicationAdapter implements ApplicationListener {
 
 	int updatemotion() {
 		if (upMove) {
-			if (x + sprite_hero.getHeight() < Gdx.graphics.getHeight())
+			if (x + sprite_hero.getHeight() - 40 < Gdx.graphics.getHeight())
 				x += 150 * Gdx.graphics.getDeltaTime();
 
 		}
 
 		if (downMove) {
-			if (x > 0)
+			if (x > -30)
 				x -= 150 * Gdx.graphics.getDeltaTime();
 
 		}
