@@ -33,7 +33,7 @@ public class MyGame extends ApplicationAdapter implements ApplicationListener {
 	monster monst = null; // Monster class object
 	Bulletpool bullets = null;
 	boolean alive = true;
-	Rectangle playerBounds = new Rectangle();
+	public Rectangle playerBounds = new Rectangle();
 	float width = 200, height = 200;
 	float health_border_width = 200, health_border_height = 30;
 	float health_border_x = 8, health_border_y = 440;
@@ -100,12 +100,14 @@ public class MyGame extends ApplicationAdapter implements ApplicationListener {
 		
 
 		if (alive == true) {
+
 			sprite.draw(batch);
+
+			bullets.bulletfire();
 			sprite_hero.draw(batch);
 			sprite_health_border.draw(batch);
 			sprite_health.draw(batch);
 			monst.update();
-			bullets.bulletfire();
 		}
 		else{
 			
