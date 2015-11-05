@@ -56,7 +56,6 @@ public class Bullet {
 
 	public void render() {
 		bullet_sprite.setPosition(Bulletbound.x, Bulletbound.y);
-		//Bulletbound.setPosition(Bulletbound.x, Bulletbound.y);
 		bullet_sprite.draw(game.batch);
 		scrollbullet();
 
@@ -75,9 +74,7 @@ public class Bullet {
 
 		Array<Enemy> pool = monst.enemypool;
 		for (Enemy e : pool) {
-			System.out.println("out gunshot"+e.bound.x+" ,"+Bulletbound.x);
 			if (e.bound.overlaps(Bulletbound)) {
-				System.out.println("in gunshot");
 				e.enemylife = false;
 			}
 		}
