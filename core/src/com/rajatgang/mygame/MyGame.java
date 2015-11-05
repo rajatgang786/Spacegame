@@ -116,7 +116,7 @@ public class MyGame extends ApplicationAdapter implements ApplicationListener {
 
 		Array<Enemy> pool = monst.enemypool;
 		for (Enemy e : pool) {
-			if (e.bound.overlaps(playerBounds)) {
+			if (e.bound.overlaps(playerBounds) && e.enemylife == true) {
 				health_inner_width -= .5f;
 				if (health_inner_width == 0) {
 					alive = false;
@@ -190,6 +190,10 @@ public class MyGame extends ApplicationAdapter implements ApplicationListener {
 
 	public static MyGame getInstance() {
 		return _game;
+	}
+	
+	public monster getMonster(){
+		return monst;
 	}
 }
 

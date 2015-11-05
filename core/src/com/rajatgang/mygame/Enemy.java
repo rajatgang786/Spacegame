@@ -12,7 +12,6 @@ public class Enemy {
 	public boolean enemylife = true;
 	Texture texture;
 	Sprite enemy_sprite;
-	float x, y;
 	float width = 50, height = 50;
 	
 	public Rectangle bound = new Rectangle();
@@ -31,8 +30,8 @@ public class Enemy {
 		enemy_sprite = new Sprite(texture);
 		enemy_sprite.setSize(width, height);
 
-		bound.x = x = MathUtils.random(game.game_width, game.game_width * 1.4f);
-		bound.y = y = MathUtils.random(0, game.game_height);
+		bound.x =  MathUtils.random(game.game_width, game.game_width * 1.4f);
+		bound.y =  MathUtils.random(0, game.game_height);
 		bound.width = width;
 		bound.height = height;
 		
@@ -40,32 +39,30 @@ public class Enemy {
 
 		for (Enemy e : pool) {
 			if (e.bound.overlaps(bound)) {
-				bound.x = x += width * 6;
-				bound.y = y += height;
+				bound.x  += width * 6;
+				bound.y  += height;
 			}
 		}
 
 	}
 
 	public void render() {
-		enemy_sprite.setPosition(x, y);
+		enemy_sprite.setPosition(bound.x, bound.y);
 		//bound.setPosition(x,y);
 		if(enemylife == true){
 			enemy_sprite.draw(game.batch);
 		}
-		if (x + enemy_sprite.getWidth() < 0) {
-			x += 700;
+		if (bound.x + bound.width < 0) {
+			bound.x += 700;
+			bound.y =  MathUtils.random(0, game.game_height);
+			enemylife = true;
 		}
 
 		enemy_moving();
-
-		bound.x = x;
-		bound.y = y;
 	}
 
-	int enemy_moving() {
-		x = x - 1.0f;
-		return 0;
+	public void enemy_moving() {
+		bound.x -= 1.0f;
 	}
 
 

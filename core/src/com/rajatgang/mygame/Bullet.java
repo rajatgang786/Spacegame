@@ -43,7 +43,7 @@ public class Bullet {
 		Bulletbound.width = bullet_width;
 		Bulletbound.height = bullet_height;
 
-		monst = new monster();
+		monst = game.getMonster();
 
 		for (Bullet b : bulletstock) {
 			if (b.Bulletbound.overlaps(Bulletbound)) {
@@ -75,7 +75,7 @@ public class Bullet {
 
 		Array<Enemy> pool = monst.enemypool;
 		for (Enemy e : pool) {
-			System.out.println("out gunshot");
+			System.out.println("out gunshot"+e.bound.x+" ,"+Bulletbound.x);
 			if (e.bound.overlaps(Bulletbound)) {
 				System.out.println("in gunshot");
 				e.enemylife = false;
